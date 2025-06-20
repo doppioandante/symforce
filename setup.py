@@ -264,6 +264,18 @@ class InstallWithExtras(install):
             / build_ext_obj.get_ext_filename("symengine_wrapper"),
         )
 
+        # Sezione per gestire --user
+        if self.user:
+            install_prefix = Path(site.USER_BASE).resolve()
+        else:
+            install_prefix = Path(self.prefix).resolve()
+
+        # Configura CMake con il prefisso corretto
+        subprocess.run(
+            ["cmake", str(SOURCE_DIR), f"-DCMAKE_INSTALL_PREFIX={install_prefix}"],
+            cwd=build_dir,
+            check=True,
+        )
         # Configure with install prefix
         subprocess.run(
             ["cmake", str(SOURCE_DIR), f"-DCMAKE_INSTALL_PREFIX={self.prefix}"],
