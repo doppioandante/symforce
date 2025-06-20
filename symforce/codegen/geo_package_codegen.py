@@ -341,7 +341,7 @@ def generate(config: CodegenConfig, output_dir: T.Optional[Path] = None) -> Path
                     ],
                     cpp_matrix_types=[
                         f"sym::Vector{i}<{scalar}>"
-                        for i in range(1, 10)
+                        for i in range(1, 31)
                         for scalar in data["scalar_types"]
                     ],
                 ),

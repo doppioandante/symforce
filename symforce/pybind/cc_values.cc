@@ -170,6 +170,31 @@ constexpr void RegisterMatrices(py::class_<sym::Valuesd>& cls) {
   RegisterMatricesHelper<SquareSize, SquareSize>::Register(cls);
 }
 
+/**
+ * Calls RegisterTypeWithValues<Eigen::Matrix<double, n, 1>>(cls) for
+ * all n in [NLOW, N]
+ */
+template <int NLOW, int N>
+struct RegisterVectorsHelper {
+  static void Register(py::class_<sym::Valuesd> cls) {
+    if (N != NLOW && N != 1) {
+        RegisterTypeWithValues<Eigen::Matrix<double, N, 1>>(cls);
+        RegisterTypeWithValues<Eigen::Matrix<double, 1, N>>(cls);
+
+        RegisterMatricesHelper<NLOW, N-1>::Register(cls);
+    }
+  }
+};
+
+/**
+ * Calls RegisterTypeWithValues<Eigen::Matrix<double< n, 1>>(cls) for all
+ * n in [NLOW, N]
+ */
+template <int NLOW, int N>
+constexpr void RegisterVectors(py::class_<sym::Valuesd>& cls) {
+  RegisterVectorsHelper<NLOW, N>::Register(cls);
+}
+
 //================================================================================================//
 //-------------------------------- The Public Values Wrapper -------------------------------------//
 //================================================================================================//
@@ -309,9 +334,9 @@ void AddValuesWrapper(pybind11::module_ module) {
   RegisterTypeWithValues<double>(values_class);
   RegisterTupleTypesWithValues<AllGeoTypes<double>>(values_class);
   RegisterTupleTypesWithValues<AllCamTypes<double>>(values_class);
-  // The template paramater below is 9 because all (and only) matrices up to size 9x9 are supported
+  // The template paramater below is 9 because all (and only) matrices up to size 20x20 are supported
   // by sym::Values.
-  RegisterMatrices<9>(values_class);
+  RegisterMatrices<30>(values_class);
 }
 
 }  // namespace sym

@@ -32,8 +32,8 @@ enum type_t : int32_t {
 
   // Vector types, dynamic and fixed
   VECTORX = 10,
-  {% set k = namespace(value=11) %}
-  {% for i in range(1, 10) %}
+  {% set k = namespace(value=31) %}
+  {% for i in range(1, 31) %}
   VECTOR{{ i }} = {{ k.value }},
   {% set k.value = k.value + 1 %}
   {% endfor %}
@@ -42,6 +42,13 @@ enum type_t : int32_t {
   {% for i in range(1, 10) %}
   {% for j in range(2, 10) %}
   MATRIX{{ i }}{{ j }} = {{ k.value }},
+  {% set k.value = k.value + 1 %}
+  {% endfor %}
+  {% endfor %}
+
+  {% for i in range(10, 31) %}
+  {% for j in range(10, 31) %}
+  MATRIX{{ i }}_{{ j }} = {{ k.value }},
   {% set k.value = k.value + 1 %}
   {% endfor %}
   {% endfor %}

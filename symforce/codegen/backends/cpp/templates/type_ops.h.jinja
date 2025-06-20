@@ -31,12 +31,17 @@ static constexpr const bool kIsSparseEigenType =
 
 inline bool IsEigenType(const type_t type) {
   switch (type.value) {
-    {% for i in range(1, 10) %}
+    {% for i in range(1, 31) %}
     case type_t::VECTOR{{ i }}:
     {% endfor %}
     case type_t::VECTORX:
     {% for i in range(1, 10) %}
     {% for j in range(2, 10) %}
+    case type_t::MATRIX{{ i }}{{ j }}:
+    {% endfor %}
+    {% endfor %}
+    {% for i in range(10, 31) %}
+    {% for j in range(10, 31) %}
     case type_t::MATRIX{{ i }}{{ j }}:
     {% endfor %}
     {% endfor %}
@@ -62,12 +67,18 @@ inline bool IsEigenType(const type_t type) {
  */
 inline std::pair<int, int> EigenTypeShape(const type_t type) {
   switch (type.value) {
-    {% for i in range(1, 10) %}
+    {% for i in range(1, 31) %}
     case type_t::VECTOR{{ i }}:
       return { {{ i }}, 1 };
     {% endfor %}
     {% for i in range(1, 10) %}
     {% for j in range(2, 10) %}
+    case type_t::MATRIX{{ i }}{{ j }}:
+      return { {{ i }}, {{ j }} };
+    {% endfor %}
+    {% endfor %}
+    {% for i in range(10, 31) %}
+    {% for j in range(10, 31) %}
     case type_t::MATRIX{{ i }}{{ j }}:
       return { {{ i }}, {{ j }} };
     {% endfor %}
